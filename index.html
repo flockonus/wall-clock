@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wall Clock - to mount full screen</title>
-    <link rel="stylesheet" href="beach.css">
+    <link rel="stylesheet" href="background.css">
     <link rel="stylesheet" href="clock.css">
 </head>
 
@@ -106,14 +106,14 @@
 
 
 
-    <!-- https://codepen.io/Pedro-Ondiviela/pen/PoVmNMV -->
-    <div class="beach">
-        <div class="beach__waves" />
-        <div class="beach__sand beach__sand--background" />
-        <div class="beach__sand beach__sand--foreground" />
+    <div class="background">
+        <video id="backgroundVideo" src="videos/beach1_360p.mp4" autoplay></video>
+        <div class="overlay"></div>
     </div>
+    <canvas id="videoCanvas" style="display: none;"></canvas>
 
 
     <script src="clock.js"></script>
+    <script src="background.js"></script>
 </body>
 </html>

@@ -33,59 +33,6 @@ setInterval(() => {
 }, 1000);
 
 
-// hold a few "keyframes" for the background
-var interpolationTimes = {
-    0:  [0, 0, 0, 1],
-    1:  [0, 0, 0, 1],
-    4:  [0, 0, 0, 1],
-    6:  [210, 179, 180, 0.85],
-    7:  [210, 198, 179, 0.21],
-    11: [210, 228, 179, 0.1],
-    13: [220, 218, 159, 0.1],
-    16: [220, 218, 159, 0.1],
-    18: [120, 100, 200, 0.8],
-    21: [5, 0, 20, 0.9],
-    23: [0, 0, 0, 1],
-    24: [0, 0, 0, 1],
-}
-
-// my own function
-function updateBG() {
-    var c = document.querySelector('.clock')
-    var values = [0,0,0,0]
-    var now = new Date()
-    var hour = now.getHours()
-    var minute = now.getMinutes()
-    // find the closest hour from interpolation, both upper and lower
-    var lower = 0
-    var upper = 0
-    for (var key in interpolationTimes) {
-        key = parseInt(key)
-        if (key > hour) {
-            upper = key
-            break
-        }
-        lower = key
-    }
-    // interpolate the color
-    var lowerValues = interpolationTimes[lower]
-    var upperValues = interpolationTimes[upper]
-    var now = hour + (minute * 1.6665)/100
-    for (var i = 0; i < 4; i++) {
-        values[i] = lowerValues[i] + (upperValues[i] - lowerValues[i]) * (now - lower) / (upper - lower)
-    }
-    console.log("now",now)
-    console.log("lower",lower)
-    console.log("upper",upper)
-    console.log("values", values);
-    c.style['backgroundColor'] = 'rgba('+ values.join(',') +')'
-}
-
-// based on time of day, let's update the illumination
-setInterval(updateBG, 60 * 1000);
-updateBG();
-
-
 
 function openFullscreen(el) {
     // debugger

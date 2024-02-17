@@ -37,7 +37,7 @@ body {
 }
 
 .clock>div {
-    margin: 0 2vw;
+    margin: 0 0.8vw;
 }
 
 .digit {
@@ -45,6 +45,7 @@ body {
     position: relative;
     height: 24rem;
     zoom: 1.32;
+    margin: 0 0.4vw;
 }
 
 .hours,
@@ -77,6 +78,7 @@ body {
     height: 3rem;
     background-color: var(--active-color);
     border-radius: 50%;
+    box-shadow: 0px 0px 6px grey;
 }
 
 .segment-2 {
