@@ -1,6 +1,6 @@
 :root {
-    --active-color: #53Fa3e;
-    --background-color: #000;
+    /* --active-color: #53Fa3e; */
+    /* --background-color: #000; */
 }
 
 *,
@@ -58,7 +58,7 @@ body {
 .segment {
     width: 8rem;
     height: 2rem;
-    background-color: var(--active-color);
+    background-color: #53Fa3e;
     opacity: 0.08;
     position: absolute;
     border-radius: 10rem;
@@ -76,7 +76,7 @@ body {
 .colon {
     width: 3rem;
     height: 3rem;
-    background-color: var(--active-color);
+    background-color: #53Fa3e;
     border-radius: 50%;
     box-shadow: 0px 0px 6px grey;
 }

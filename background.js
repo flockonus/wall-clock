@@ -1,87 +1,83 @@
 
-// hold a few "keyframes" for the background
-var interpolationTimes = {
-    0: [0, 0, 0, 1],
-    1: [0, 0, 0, 1],
-    4: [0, 0, 0, 1],
-    6: [210, 179, 180, 0.85],
-    7: [210, 198, 179, 0.21],
-    11: [210, 228, 179, 0.1],
-    13: [220, 218, 159, 0.1],
-    16: [220, 218, 159, 0.1],
-    18: [120, 100, 200, 0.8],
-    21: [5, 0, 20, 0.9],
-    23: [0, 0, 0, 1],
-    24: [0, 0, 0, 1],
+var video, canvas, context, overlay;
+var currentVideo = null
+
+
+var hourParams = {
+    0: {video: null, fontColor: '#9fddff', bg: 1},
+    1: {video: null, fontColor: '#9fddff', bg: 1},
+    4: {video: 1, fontColor: '#53Fa3e', bg: 0.6},
+    5: {video: 1, fontColor: '#53Fa3e', bg: 0.4},
+    6: {video: 1, fontColor: '#53Fa3e', bg: 0.2},
+    7: {video: 1, fontColor: '#53Fa3e', bg: null},
+    10: {video: 7, fontColor: '#53Fa3e', bg: null},
+    12: {video: 5, fontColor: '#ff9f44', bg: null},
+    14: {video: 8, fontColor: '#ff9f44', bg: null},
+    17: {video: 4, fontColor: '#53Fa3e', bg: 0.2},
+    18: {video: 4, fontColor: '#53Fa3e', bg: 0.3},
+    19: {video: 4, fontColor: '#53Fa3e', bg: 0.4},
+    20: {video: 6, fontColor: '#53Fa3e', bg: 0.6},
+    23: {video: null, fontColor: '#9fddff', bg: 1},
 }
 
-// my own function
-function updateBG() {
-    var c = document.querySelector('.clock')
-    var values = [0, 0, 0, 0]
+function updateVideoFontBackground() {
     var now = new Date()
     var hour = now.getHours()
-    var minute = now.getMinutes()
-    // find the closest hour from interpolation, both upper and lower
+
     var lower = 0
-    var upper = 0
-    for (var key in interpolationTimes) {
+    var hoursList = Object.keys(hourParams).map(x => parseInt(x, 10)).sort((a, b) => a - b);
+    // debugger
+    console.log("hoursList", hoursList);
+    for (var key of hoursList) {
         key = parseInt(key)
-        if (key > hour) {
-            upper = key
-            break
-        }
+        if (key > hour) break
         lower = key
+        console.log("lower", lower);
     }
-    // interpolate the color
-    var lowerValues = interpolationTimes[lower]
-    var upperValues = interpolationTimes[upper]
-    var now = hour + (minute * 1.6665) / 100
-    for (var i = 0; i < 4; i++) {
-        values[i] = lowerValues[i] + (upperValues[i] - lowerValues[i]) * (now - lower) / (upper - lower)
+    var nowParams = hourParams[lower]
+    console.log("nowParams", lower, nowParams);
+
+    if (nowParams.bg !== null) {
+        overlay.style.backgroundColor = `rgba(100, 0, 0, ${nowParams.bg})`;
+    } else {
+        overlay.style.backgroundColor = '';
     }
-    console.log("now", now)
-    console.log("lower", lower)
-    console.log("upper", upper)
-    console.log("values", values);
-    c.style['backgroundColor'] = 'rgba(' + values.join(',') + ')'
+
+    if (nowParams.video !== null) {
+        if (currentVideo !== nowParams.video) {
+            sampleColorCache = null;
+            currentVideo = nowParams.video;
+            video.src = `videos/beach${nowParams.video}_360p.mp4`;
+            video.volume = 0;
+            video.play();
+        }
+    } else {
+        if (currentVideo !== null) {
+            currentVideo = null;
+            video.pause();
+            video.src = '';
+        }
+    }
+
+    // Set the font color
+    document.querySelectorAll('.colon').forEach(el => el.style.backgroundColor = nowParams.fontColor)
+    document.querySelectorAll('.segment').forEach(el => el.style.backgroundColor = nowParams.fontColor)
 }
 
-// based on time of day, let's update the illumination
-setInterval(updateBG, 60 * 1000);
-updateBG();
-
-
-
-// ----- VIDEO -----
-
-// var vid = document.querySelector('.background video')
-// vid.volume = 0;
-// vid.play();
-// // make a smooth video transition to replay by fading the video with a black overlay
-// vid.addEventListener('ended', function() {
-//     var overlay = document.querySelector('.background .overlay')
-//     overlay.style['opacity'] = 1;
-//     setTimeout(function() {
-//         vid.currentTime = 0;
-//         vid.play();
-//         overlay.style['opacity'] = 0;
-//     }, 1000);
-// }, false);
 
 document.addEventListener("DOMContentLoaded", function () {
-    var video = document.getElementById('backgroundVideo');
+    video = document.getElementById('backgroundVideo');
     video.volume = 0;
     video.play();
 
-    var canvas = document.getElementById('videoCanvas');
-    const context = canvas.getContext('2d');
+    canvas = document.getElementById('videoCanvas');
+    context = canvas.getContext('2d');
 
     // var background = document.querySelector('.background');
     // var overlay = document.createElement('div');
     // overlay.classList.add('overlay');
     // background.appendChild(overlay);
-    var overlay = document.querySelector('.background .overlay');
+    overlay = document.querySelector('.background .overlay');
 
     video.ontimeupdate = function () {
         var timeLeft = video.duration - video.currentTime;
@@ -102,6 +98,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 700); // Match this with the CSS transition time
         }
     };
+
+    updateVideoFontBackground();
+    setInterval(updateVideoFontBackground, 60 * 1000);
 });
 
 
